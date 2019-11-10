@@ -1,5 +1,8 @@
 const server = require('http').createServer()
 const io = require('socket.io')(server)
+const env = require('dotenv').config()
+
+const PORT = process.env.PORT || 3000
 
 io.on('connection', socket => {
     const type = socket.handshake.query.type
@@ -15,6 +18,10 @@ io.on('connection', socket => {
 
 })
 
-server.listen(9200, ()=> {
-    console.log('Server listen to port 9200')
+// server.listen(9200, ()=> {
+//     console.log('Server listen to port 9200')
+// })
+
+server.listen(PORT, () => {
+    console.log('Server running on port: ' + PORT)
 })
