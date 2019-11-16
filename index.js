@@ -2,7 +2,7 @@ const http = require('http')
 
 require('dotenv').config()
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 4500
 
 const handleRequest = (req, res) => {
     res.end('Home page')
@@ -11,7 +11,7 @@ const handleRequest = (req, res) => {
 const server = http.createServer(handleRequest)
 const io = require('socket.io')(server)
 
-io.on('connection', socket => {
+io.on('connect', socket => {
     const type = socket.handshake.query.type
     const id = socket.client.id
 
@@ -23,6 +23,20 @@ io.on('connection', socket => {
         socket.broadcast.emit('stream', data)
     })
 
+    socket.on('JSONDATA', (data) => {
+        var dataBridge = data.dataBridge
+
+        var dashboard = dataBridge.map((d) => {
+            return { name: d.Text, value: d.Value }
+        })
+
+        socket.broadcast.emit('data', dashboard)
+    })
+
+    socket.on('OnReceiveData', data => {
+        var dataByte = data.DataByte
+        socket.broadcast.emit('stream', dataByte)
+    })
 })
 
 server.listen(PORT, () => {
