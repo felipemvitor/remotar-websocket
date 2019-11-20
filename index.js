@@ -37,6 +37,12 @@ io.on('connect', socket => {
         var dataByte = data.DataByte
         socket.broadcast.emit('stream', dataByte)
     })
+
+
+    socket.on('plot', data => {
+        console.log(`Coordinates received: ${data.x}, ${data.y}`)
+        socket.broadcast.emit('plot', data)
+    })
 })
 
 server.listen(PORT, () => {
